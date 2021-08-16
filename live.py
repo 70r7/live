@@ -119,7 +119,7 @@ def check_sell(lost_items):
 
     
     if (int(status) == 4):
-        return print(f"{title} продан за {amount} {currency} {lost_items}")
+        return print(f"{title} was sold for {amount} {currency}")
     
 
 
