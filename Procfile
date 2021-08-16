@@ -1,1 +1,1 @@
-worker: python live.py
+web: python live.py
