@@ -113,11 +113,10 @@ def zip_list(old_pid, new_pid):
 
 def check_sell(lost_items):
     # Далее отправляется запрос на эти элементы и проверяется продан ли предмет
-    for pid in lost_items:
-        try:
-            responce = requests.post(url='https://www.binance.com/bapi/nft/v1/friendly/nft/nft-trade/product-detail', headers=headers, json={"productId": f'{lost_items}'}).json()
-        except: 
-            print('Error. Restart...'); return 
+    try:
+        responce = requests.post(url='https://www.binance.com/bapi/nft/v1/friendly/nft/nft-trade/product-detail', headers=headers, json={"productId": f'{lost_items}'}).json()
+    except: 
+        print('Error. Restart...'); return 
     #timestamp = time.ctime(int(responce["data"]) / 1000)
     try:
         status = responce["data"]["productDetail"]["status"]
@@ -132,7 +131,7 @@ def check_sell(lost_items):
     
     if (int(status) == 4):
         with open(f"data/{title}.txt", "a") as file:
-            file.write(f"{batchNum} {title} was sold for {amount} {currency} at {timestamp}")
+            file.write(f"\n{batchNum} {title} was sold for {amount} {currency} at {timestamp}")
 
         return print(f"{batchNum} {title} was sold for {amount} {currency} at {timestamp}")
     
@@ -175,6 +174,7 @@ def main():
 
             old_pid = new_pid
         except:
+            time.sleep(60)
             return main()
 
     time.sleep(60)
