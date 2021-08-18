@@ -29,7 +29,7 @@ def fdata():
             "serialNo": null,
             "tradeType": null
             },
-        "size": "1000"
+        "size": "10000"
         }
     return data
 
@@ -38,7 +38,7 @@ def fdata():
 
 def collect_links():
     # Функция собирает все productId добавляет в список new_pid для сравнения со старым результатом
-    print("cl")
+    #print("cl")
     lst = []
     pid = []
 
@@ -67,7 +67,7 @@ def collect_links():
 
 def first_collect_links():
     # Нужна лишь для первого заполнения old_pid
-    print("cl2")
+    #print("cl2")
     #count = 0
     old_pid = []
     lst = []
@@ -79,7 +79,7 @@ def first_collect_links():
     # print(responce)
     try: 
         lst = responce['data']["data"]
-        print(len(lst))
+        #print(len(lst))
     except: print(responce)
     for item in lst:
         
@@ -96,7 +96,7 @@ def first_collect_links():
 def zip_list(old_pid, new_pid):
     # Объеденяет списки и находит элементы без дубликата
     
-    print("cl3")
+    #print("cl3")
     #print(old_pid)
     #print(new_pid)
     lost_items = []
@@ -106,7 +106,7 @@ def zip_list(old_pid, new_pid):
         if old_pid.count(i) == 1:
             lost_items.append(i)
 
-    print(f'lost items {len(lost_items)}')
+    #print(f'lost items {len(lost_items)}')
     #print(lost_items)
     return lost_items
 
