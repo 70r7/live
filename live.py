@@ -133,7 +133,7 @@ def check_sell(lost_items):
         with open(f"data/{title}.txt", "a") as file:
             file.write(f"\n{batchNum} {title} was sold for {amount} {currency} at {timestamp}")
 
-        return print(f"{batchNum} {title} was sold for {amount} {currency} at {timestamp}")
+        return print(f"{batchNum} {title} was sold for {amount} {currency} at {timestamp}\n")
     
 
 
