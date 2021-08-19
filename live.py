@@ -1,14 +1,16 @@
 import requests
 import fake_useragent
-import multiprocessing
+from concurrent.futures import ThreadPoolExecutor
 import time
-import json
+import datetime
 
 
 link = "https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list"
 
 new_pid = []
 old_pid = []
+sold_out = []
+
 
 ua = fake_useragent.UserAgent().random
 
@@ -95,10 +97,6 @@ def first_collect_links():
 
 def zip_list(old_pid, new_pid):
     # Объеденяет списки и находит элементы без дубликата
-    
-    #print("cl3")
-    #print(old_pid)
-    #print(new_pid)
     lost_items = []
     old_pid += new_pid 
     
@@ -112,6 +110,7 @@ def zip_list(old_pid, new_pid):
 
 
 def check_sell(lost_items):
+    if lost_items in sold_out: return
     # Далее отправляется запрос на эти элементы и проверяется продан ли предмет
     try:
         responce = requests.post(url='https://www.binance.com/bapi/nft/v1/friendly/nft/nft-trade/product-detail', headers=headers, json={"productId": f'{lost_items}'}).json()
@@ -130,6 +129,7 @@ def check_sell(lost_items):
 
     
     if (int(status) == 4):
+        sold_out.append(lost_items)
         with open(f"data/{title}.txt", "a") as file:
             file.write(f"\n{batchNum} {title} was sold for {amount} {currency} at {timestamp}")
 
@@ -141,9 +141,12 @@ def check_sell(lost_items):
 
 def main():
     # Основная функция
+    now = datetime.datetime.now()
+    global sold_out
+    if now.minute >= 29 and now.minute <= 30: sold_out = []
+
     global new_pid
     global old_pid
-
     new_pid = []
     
 
@@ -167,8 +170,8 @@ def main():
             lost_items = zip_list(old_pid=old_pid, new_pid=new_pid)
 
 
-            with multiprocessing.Pool(multiprocessing.cpu_count()) as process:
-                process.map(check_sell, lost_items)
+            with ThreadPoolExecutor(4) as executor:
+                executor.map(check_sell, lost_items)
 
             #check_sell(lost_items)
 
